@@ -9,7 +9,7 @@ Trained on a sample of the AG News dataset as part of a word embeddings assignme
 **AG News** — a news topic classification dataset with 4 categories:
 World, Sports, Business, and Sci/Tech.
 
-- Source: [`fancyzhx/ag_news`]("https://huggingface.co/datasets/TheFactoryX/edition_0000_fancyzhx-ag_news-readymade") on Hugging Face
+- Source: [fancyzhx/ag_news](https://huggingface.co/datasets/TheFactoryX/edition_0000_fancyzhx-ag_news-readymade) on Hugging Face
 - We sampled 400 articles per category = 1600 total
 - Only the raw `text` field is used, no labels
 
