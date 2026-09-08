@@ -1,0 +1,45 @@
+Iteration 1: message_change=1.250000
+Iteration 2: message_change=0.625000
+Iteration 3: message_change=0.312500
+Iteration 4: message_change=0.156250
+Iteration 5: message_change=0.078125
+Iteration 6: message_change=0.047684
+Iteration 7: message_change=0.029802
+Iteration 8: message_change=0.018626
+Iteration 9: message_change=0.011642
+Iteration 10: message_change=0.007276
+Iteration 11: message_change=0.004547
+Iteration 12: message_change=0.002842
+Iteration 13: message_change=0.001776
+Iteration 14: message_change=0.001110
+Iteration 15: message_change=0.000694
+Iteration 16: message_change=0.000434
+Iteration 17: message_change=0.000271
+Iteration 18: message_change=0.000169
+Iteration 19: message_change=0.000106
+Iteration 20: message_change=0.000066
+Converged
+
+=== FINAL CANDIDATE RANKING ===
+ 1. C3 | belief=0.607 | STV=(0.607, 0.857)
+ 2. C5 | belief=0.607 | STV=(0.607, 0.857)
+ 3. C4 | belief=0.600 | STV=(0.600, 0.800)
+ 4. C8 | belief=0.600 | STV=(0.600, 0.800)
+ 5. C10 | belief=0.600 | STV=(0.600, 0.800)
+ 6. C12 | belief=0.600 | STV=(0.600, 0.800)
+ 7. C15 | belief=0.600 | STV=(0.600, 0.800)
+ 8. C20 | belief=0.600 | STV=(0.600, 0.800)
+ 9. C6 | belief=0.500 | STV=(0.500, 0.870)
+10. C9 | belief=0.500 | STV=(0.500, 0.800)
+11. C11 | belief=0.500 | STV=(0.500, 0.800)
+12. C13 | belief=0.500 | STV=(0.500, 0.800)
+13. C16 | belief=0.500 | STV=(0.500, 0.800)
+14. C17 | belief=0.500 | STV=(0.500, 0.870)
+15. C18 | belief=0.500 | STV=(0.500, 0.800)
+16. C19 | belief=0.500 | STV=(0.500, 0.870)
+17. C2 | belief=0.400 | STV=(0.400, 0.800)
+18. C7 | belief=0.400 | STV=(0.400, 0.800)
+19. C1 | belief=0.393 | STV=(0.393, 0.857)
+20. C14 | belief=0.393 | STV=(0.393, 0.857)
+
+Generated pln_rules.metta

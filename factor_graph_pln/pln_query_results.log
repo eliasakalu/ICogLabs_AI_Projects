@@ -1,0 +1,2018 @@
+[33m--> metta runnable  -->
+[36m!(import! &self (library lib_import))
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           ( library(lib_import, B),
+             'import!'('&self', B, A)
+           ),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(import_prolog_function consult)
+[33m-->  prolog goal  -->[35m 
+:- findall(A, import_prolog_function(consult, A), _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (import_prolog_functions_from_file $prologfile $importfunctions) (let* (($prologfile (exists_file))
+                                                                           ($prologfile (consult))
+                                                                           ($function (superpose $importfunctions)))
+                                                                          (import_prolog_function $function)))
+[33m--> prolog clause -->
+[32mimport_prolog_functions_from_file(A, B, C) :-
+    A=D,
+    exists_file(D),
+    A=E,
+    consult(E),
+    F=G,
+    superpose(B, G),
+    import_prolog_function(F, C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(import_prolog_function use_module)
+[33m-->  prolog goal  -->[35m 
+:- findall(A, import_prolog_function(use_module, A), _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (import_prolog_functions_from_module $prologfile $importfunctions) (let* (($prologfile (exists_file))
+                                                                             ($prologfile (use_module))
+                                                                             ($function (superpose $importfunctions)))
+                                                                            (import_prolog_function $function)))
+[33m--> prolog clause -->
+[32mimport_prolog_functions_from_module(A, B, C) :-
+    A=D,
+    exists_file(D),
+    A=E,
+    use_module(E),
+    F=G,
+    superpose(B, G),
+    import_prolog_function(F, C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(import_prolog_functions_from_file (library lib_import.pl) (static-import! git-import! use-module!))
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           ( library('lib_import.pl', B),
+             import_prolog_functions_from_file(B,
+                                               [ 'static-import!',
+                                                 'git-import!',
+                                                 'use-module!'
+                                               ],
+                                               A)
+           ),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(git-import! "https://github.com/trueagi-io/PLN.git")
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           'git-import!'("https://github.com/trueagi-io/PLN.git", A),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(import! &self (library PLN lib_pln))
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           ( library('PLN', lib_pln, B),
+             'import!'('&self', B, A)
+           ),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (and5 $0 $1 $2 $3 $4)
+   (and $0 (and $1 (and $2 (and $3 $4)))))
+[33m--> prolog clause -->
+[32mand5(A, B, C, D, E, F) :-
+    and(D, E, G),
+    and(C, G, H),
+    and(B, H, I),
+    and(A, I, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (min5 $0 $1 $2 $3 $4)
+   (min $0 (min $1 (min $2 (min $3 $4)))))
+[33m--> prolog clause -->
+[32mmin5(A, B, C, D, E, F) :-
+    min(D, E, G),
+    min(C, G, H),
+    min(B, H, I),
+    min(A, I, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (/safe $A $B)
+   (if (> $B 0.0)
+       (/ $A $B)
+       (empty)))
+[33m--> prolog clause -->
+[32m'/safe'(A, B, C) :-
+    >(B, 0.0, D),
+    (   D==true
+    ->  /(A, B, C)
+    ;   empty(C)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (clamp $v $min $max) (min $max (max $v $min)))
+[33m--> prolog clause -->
+[32mclamp(A, B, C, D) :-
+    max(A, B, E),
+    min(C, E, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (negate $arg) (- 1.0 $arg))
+[33m--> prolog clause -->
+[32mnegate(A, B) :-
+    -(1.0, A, B).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (invert $arg) (/safe 1.0 $arg))
+[33m--> prolog clause -->
+[32minvert(A, B) :-
+    '/safe'(1.0, A, B).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PushUnique $L $x)
+   (if (is-member $x $L)
+       $L
+       (append $L ($x))))
+[33m--> prolog clause -->
+[32m'PushUnique'(A, B, C) :-
+    'is-member'(B, A, D),
+    (   D==true
+    ->  C=A
+    ;   reduce([B], E),
+        append(A, E, C)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (ConcatUnique $L1 $L2)
+   (if (== $L2 ())
+       $L1
+       (let* (($head (car-atom $L2))
+              ($tail (cdr-atom $L2)))
+             (ConcatUnique (PushUnique $L1 $head) $tail))))
+[33m--> prolog clause -->
+[32m'ConcatUnique'(A, B, C) :-
+    ==(B, [], D),
+    (   D==true
+    ->  C=A
+    ;   E=F,
+        'car-atom'(B, F),
+        G=H,
+        'cdr-atom'(B, H),
+        'PushUnique'(A, E, I),
+        'ConcatUnique'(I, G, C)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta sexpr -->
+[36m(: smallest-intersection-probability (-> Number Number Number))
+[33m^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (smallest-intersection-probability $As $Bs)
+   (clamp (/ (- (+ $As $Bs) 1) $As) 0 1))
+[33m--> prolog clause -->
+[32m'smallest-intersection-probability'(A, B, C) :-
+    +(A, B, D),
+    -(D, 1, E),
+    /(E, A, F),
+    clamp(F, 0, 1, C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta sexpr -->
+[36m(: largest-intersection-probability (-> Number Number Number))
+[33m^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (largest-intersection-probability $As $Bs)
+   (clamp (/ $Bs $As) 0 1))
+[33m--> prolog clause -->
+[32m'largest-intersection-probability'(A, B, C) :-
+    /(B, A, D),
+    clamp(D, 0, 1, C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta sexpr -->
+[36m(: conditional-probability-consistency (-> Number Number Number Bool))
+[33m^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (conditional-probability-consistency $As $Bs $ABs)
+   (and (< 0 $As)
+        (and (<= (smallest-intersection-probability $As $Bs) $ABs)
+             (<= $ABs (largest-intersection-probability $As $Bs)))))
+[33m--> prolog clause -->
+[32m'conditional-probability-consistency'(A, B, C, D) :-
+    <(0, A, E),
+    (   'get-type'(A, 'Number')
+    *-> true
+    ;   'get-metatype'(A, 'Number')
+    ),
+    (   'get-type'(B, 'Number')
+    *-> true
+    ;   'get-metatype'(B, 'Number')
+    ),
+    'smallest-intersection-probability'(A, B, F),
+    (   'get-type'(F, 'Number')
+    *-> true
+    ;   'get-metatype'(F, 'Number')
+    ),
+    <=(F, C, G),
+    (   'get-type'(A, 'Number')
+    *-> true
+    ;   'get-metatype'(A, 'Number')
+    ),
+    (   'get-type'(B, 'Number')
+    *-> true
+    ;   'get-metatype'(B, 'Number')
+    ),
+    'largest-intersection-probability'(A, B, H),
+    (   'get-type'(H, 'Number')
+    *-> true
+    ;   'get-metatype'(H, 'Number')
+    ),
+    <=(C, H, I),
+    and(G, I, J),
+    and(E, J, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Consistency_ImplicationImplicantConjunction $As $Bs $Cs $ACs $BCs)
+               (and5 (> $As 0) (> $Bs 0) (> $Cs 0)          (<= $ACs (/ $Cs $As))
+         (<= $BCs (/ $Cs $Bs))))
+[33m--> prolog clause -->
+[32m'Consistency_ImplicationImplicantConjunction'(A,
+                                                   B,
+                                                   C,
+                                                   D,
+                                                   E,
+                                                   F) :-
+    >(A, 0, G),
+    >(B, 0, H),
+    >(C, 0, I),
+    /(C, A, J),
+    <=(D, J, K),
+    /(C, B, L),
+    <=(E, L, M),
+    and5(G, H, I, K, M, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV $stv) (empty))
+[33m--> prolog clause -->
+[32m'STV'(_, A) :-
+    empty(A).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta sexpr -->
+[36m(: Truth_c2w (-> Number Number))
+[33m^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_c2w $c)
+   (/safe $c (- 1 $c)))
+[33m--> prolog clause -->
+[32m'Truth_c2w'(A, B) :-
+    -(1, A, C),
+    '/safe'(A, C, B).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta sexpr -->
+[36m(: Truth_w2c (-> Number Number))
+[33m^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_w2c $w)
+   (/safe $w (+ $w 1)))
+[33m--> prolog clause -->
+[32m'Truth_w2c'(A, B) :-
+    +(A, 1, C),
+    '/safe'(A, C, B).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta sexpr -->
+[36m(: Truth_or (-> Number Number Number))
+[33m^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_or $a $b) 
+   (- 1 (* (- 1 $a) (- 1 $b))))
+[33m--> prolog clause -->
+[32m'Truth_or'(A, B, C) :-
+    -(1, A, D),
+    -(1, B, E),
+    *(D, E, F),
+    -(1, F, C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_Deduction (stv $Ps $Pc)
+                    (stv $Qs $Qc)
+                    (stv $Rs $Rc)
+                    (stv $PQs $PQc)
+                    (stv $QRs $QRc))
+   (if (and (conditional-probability-consistency $Ps $Qs $PQs)
+            (conditional-probability-consistency $Qs $Rs $QRs))
+              (stv (if (< 0.9999 $Qs)                                                  $Rs
+                                (+ (* $PQs $QRs) (/safe (* (- 1 $PQs) (- $Rs (* $Qs $QRs))) (- 1 $Qs))))
+            (* (* $PQs $QRs) (* $PQc $QRc)))
+              (stv 1 0)))
+[33m--> prolog clause -->
+[32m'Truth_Deduction'([stv, A, _],
+                       [stv, B, _],
+                       [stv, C, _],
+                       [stv, D, E],
+                       [stv, F, G],
+                       H) :-
+    (   'get-type'(A, 'Number')
+    *-> true
+    ;   'get-metatype'(A, 'Number')
+    ),
+    (   'get-type'(B, 'Number')
+    *-> true
+    ;   'get-metatype'(B, 'Number')
+    ),
+    (   'get-type'(D, 'Number')
+    *-> true
+    ;   'get-metatype'(D, 'Number')
+    ),
+    'conditional-probability-consistency'(A, B, D, I),
+    (   'get-type'(I, 'Bool')
+    *-> true
+    ;   'get-metatype'(I, 'Bool')
+    ),
+    (   'get-type'(B, 'Number')
+    *-> true
+    ;   'get-metatype'(B, 'Number')
+    ),
+    (   'get-type'(C, 'Number')
+    *-> true
+    ;   'get-metatype'(C, 'Number')
+    ),
+    (   'get-type'(F, 'Number')
+    *-> true
+    ;   'get-metatype'(F, 'Number')
+    ),
+    'conditional-probability-consistency'(B, C, F, J),
+    (   'get-type'(J, 'Bool')
+    *-> true
+    ;   'get-metatype'(J, 'Bool')
+    ),
+    and(I, J, K),
+    (   K==true
+    ->  H=[stv, L, M],
+        <(0.9999, B, N),
+        (   N==true
+        ->  L=C
+        ;   *(D, F, O),
+            -(1, D, P),
+            *(B, F, Q),
+            -(C, Q, R),
+            *(P, R, S),
+            -(1, B, T),
+            '/safe'(S, T, U),
+            +(O, U, L)
+        ),
+        *(D, F, V),
+        *(E, G, W),
+        *(V, W, M)
+    ;   H=[stv, 1, 0]
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_Induction (stv $sA $cA)
+                    (stv $sB $cB)
+                    (stv $sC $cC)
+                    (stv $sBA $cBA)
+                    (stv $sBC $cBC))
+   (stv (+ (/safe (* (* $sBA $sBC) $sB) $sA)
+           (* (- 1 (/safe (* $sBA $sB) $sA))
+              (/safe (- $sC (* $sB $sBC)) (- 1 $sB))))
+        (Truth_w2c (* (* $sBC $cBC) $cBA))))
+[33m--> prolog clause -->
+[32m'Truth_Induction'([stv, A, _],
+                       [stv, B, _],
+                       [stv, C, _],
+                       [stv, D, E],
+                       [stv, F, G],
+                       [stv, H, I]) :-
+    *(D, F, J),
+    *(J, B, K),
+    '/safe'(K, A, L),
+    *(D, B, M),
+    '/safe'(M, A, N),
+    -(1, N, O),
+    *(B, F, P),
+    -(C, P, Q),
+    -(1, B, R),
+    '/safe'(Q, R, S),
+    *(O, S, T),
+    +(L, T, H),
+    *(F, G, U),
+    *(U, E, V),
+    (   'get-type'(V, 'Number')
+    *-> true
+    ;   'get-metatype'(V, 'Number')
+    ),
+    'Truth_w2c'(V, I),
+    (   'get-type'(I, 'Number')
+    *-> true
+    ;   'get-metatype'(I, 'Number')
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_Abduction (stv $sA $cA)
+                    (stv $sB $cB)
+                    (stv $sC $cC)
+                    (stv $sAB $cAB)
+                    (stv $sCB $cCB))
+   (stv (+ (/safe (* (* $sAB $sCB) $sC)
+                  $sB)
+           (/safe (* $sC (* (- 1 $sAB) (- 1 $sCB)))
+                  (- 1 $sB)))
+        (Truth_w2c (* (* $sAB $cAB) $cCB))))
+[33m--> prolog clause -->
+[32m'Truth_Abduction'([stv, _, _],
+                       [stv, A, _],
+                       [stv, B, _],
+                       [stv, C, D],
+                       [stv, E, F],
+                       [stv, G, H]) :-
+    *(C, E, I),
+    *(I, B, J),
+    '/safe'(J, A, K),
+    -(1, C, L),
+    -(1, E, M),
+    *(L, M, N),
+    *(B, N, O),
+    -(1, A, P),
+    '/safe'(O, P, Q),
+    +(K, Q, G),
+    *(C, D, R),
+    *(R, F, S),
+    (   'get-type'(S, 'Number')
+    *-> true
+    ;   'get-metatype'(S, 'Number')
+    ),
+    'Truth_w2c'(S, H),
+    (   'get-type'(H, 'Number')
+    *-> true
+    ;   'get-metatype'(H, 'Number')
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_ModusPonens (stv $Ps $Pc) (stv $PQs $PQc)) 
+   (stv (+ (* $Ps $PQs) (* 0.02 (- 1 $Ps)))
+        (* (* $Ps $PQs) (* $Pc $PQc))))
+[33m--> prolog clause -->
+[32m'Truth_ModusPonens'([stv, A, B],
+                         [stv, C, D],
+                         [stv, E, F]) :-
+    *(A, C, G),
+    -(1, A, H),
+    *(0.02, H, I),
+    +(G, I, E),
+    *(A, C, J),
+    *(B, D, K),
+    *(J, K, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_SymmetricModusPonens (stv $sA $cA) (stv $sAB $cAB))
+   (let* (($snotAB 0.2)
+          ($cnotAB 1.0))
+         (stv (+ (* $sA $sAB) (* (* $snotAB (negate $sA)) (+ 1.0 $sAB)))
+              (* (* $cA $cAB) (Truth_or $sA $sAB)))))
+[33m--> prolog clause -->
+[32m'Truth_SymmetricModusPonens'([stv, A, B],
+                                  [stv, C, D],
+                                  [stv, E, F]) :-
+    G=0.2,
+    true,
+    *(A, C, H),
+    negate(A, I),
+    *(G, I, J),
+    +(1.0, C, K),
+    *(J, K, L),
+    +(H, L, E),
+    *(B, D, M),
+    (   'get-type'(A, 'Number')
+    *-> true
+    ;   'get-metatype'(A, 'Number')
+    ),
+    (   'get-type'(C, 'Number')
+    *-> true
+    ;   'get-metatype'(C, 'Number')
+    ),
+    'Truth_or'(A, C, N),
+    (   'get-type'(N, 'Number')
+    *-> true
+    ;   'get-metatype'(N, 'Number')
+    ),
+    *(M, N, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_Revision (stv $f1 $c1) (stv $f2 $c2))
+   (let* (($w1 (Truth_c2w $c1))
+          ($w2 (Truth_c2w $c2))
+          ($w (+ $w1 $w2))
+          ($f (/safe (+ (* $w1 $f1) (* $w2 $f2)) $w))
+          ($c (Truth_w2c $w)))
+         (stv (min 1.0 $f)
+              (min 1.0 (max (max $c $c1) $c2)))))
+[33m--> prolog clause -->
+[32m'Truth_Revision'([stv, A, B],
+                      [stv, C, D],
+                      [stv, E, F]) :-
+    G=H,
+    (   'get-type'(B, 'Number')
+    *-> true
+    ;   'get-metatype'(B, 'Number')
+    ),
+    'Truth_c2w'(B, H),
+    (   'get-type'(H, 'Number')
+    *-> true
+    ;   'get-metatype'(H, 'Number')
+    ),
+    I=J,
+    (   'get-type'(D, 'Number')
+    *-> true
+    ;   'get-metatype'(D, 'Number')
+    ),
+    'Truth_c2w'(D, J),
+    (   'get-type'(J, 'Number')
+    *-> true
+    ;   'get-metatype'(J, 'Number')
+    ),
+    K=L,
+    +(G, I, L),
+    M=N,
+    *(G, A, O),
+    *(I, C, P),
+    +(O, P, Q),
+    '/safe'(Q, K, N),
+    R=S,
+    (   'get-type'(K, 'Number')
+    *-> true
+    ;   'get-metatype'(K, 'Number')
+    ),
+    'Truth_w2c'(K, S),
+    (   'get-type'(S, 'Number')
+    *-> true
+    ;   'get-metatype'(S, 'Number')
+    ),
+    min(1.0, M, E),
+    max(R, B, T),
+    max(T, D, U),
+    min(1.0, U, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_Negation (stv $s $c))
+   (stv (- 1.0 $s) $c))
+[33m--> prolog clause -->
+[32m'Truth_Negation'([stv, A, B], [stv, C, B]) :-
+    -(1.0, A, C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_inversion (stv $Bs $Bc) (stv $ABs $ABc))
+         (stv $ABs (* $Bc (* $ABc 0.6))))
+[33m--> prolog clause -->
+[32m'Truth_inversion'([stv, _, A],
+                       [stv, B, C],
+                       [stv, B, D]) :-
+    *(C, 0.6, E),
+    *(A, E, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
+    (let* (($ConclS (if (< 0.99 (* $ABs $ABc))                                                                        $ABs
+                                                (/safe (* (+ 1.0 (/safe $Bs $As)) $ABs) (+ 1.0 $ABs)))))
+          (stv $ConclS $ABc)))
+[33m--> prolog clause -->
+[32m'Truth_equivalenceToImplication'([stv, A, _],
+                                      [stv, B, _],
+                                      [stv, C, D],
+                                      [stv, E, D]) :-
+    E=F,
+    *(C, D, G),
+    <(0.99, G, H),
+    (   H==true
+    ->  F=C
+    ;   '/safe'(B, A, I),
+        +(1.0, I, J),
+        *(J, C, K),
+        +(1.0, C, L),
+        '/safe'(K, L, F)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (TransitiveSimilarityStrength $sA $sB $sC $sAB $sBC)
+   (let* (($T1 (/ (* (+ 1.0 (/ $sB $sA)) $sAB) (+ 1.0 $sAB)))
+          ($T2 (/ (* (+ 1.0 (/ $sC $sB)) $sBC) (+ 1.0 $sBC)))
+          ($T3 (/ (* (+ 1.0 (/ $sB $sC)) $sBC) (+ 1.0 $sBC)))
+          ($T4 (/ (* (+ 1.0 (/ $sA $sB)) $sAB) (+ 1.0 $sAB))))
+         (invert (- (+ (invert (+ (* $T1 $T2) (* (negate $T1) (/safe (- $sC (* $sB $T2)) (negate $sB)))))
+                       (invert (+ (* $T3 $T4) (* (negate $T3) (/safe (- $sC (* $sB $T4)) (negate $sB)))))) 1.0))))
+[33m--> prolog clause -->
+[32m'TransitiveSimilarityStrength'(A,
+                                    B,
+                                    C,
+                                    D,
+                                    E,
+                                    F) :-
+    G=H,
+    /(B, A, I),
+    +(1.0, I, J),
+    *(J, D, K),
+    +(1.0, D, L),
+    /(K, L, H),
+    M=N,
+    /(C, B, O),
+    +(1.0, O, P),
+    *(P, E, Q),
+    +(1.0, E, R),
+    /(Q, R, N),
+    S=T,
+    /(B, C, U),
+    +(1.0, U, V),
+    *(V, E, W),
+    +(1.0, E, X),
+    /(W, X, T),
+    Y=Z,
+    /(A, B, A1),
+    +(1.0, A1, B1),
+    *(B1, D, C1),
+    +(1.0, D, D1),
+    /(C1, D1, Z),
+    *(G, M, E1),
+    negate(G, F1),
+    *(B, M, G1),
+    -(C, G1, H1),
+    negate(B, I1),
+    '/safe'(H1, I1, J1),
+    *(F1, J1, K1),
+    +(E1, K1, L1),
+    invert(L1, M1),
+    *(S, Y, N1),
+    negate(S, O1),
+    *(B, Y, P1),
+    -(C, P1, Q1),
+    negate(B, R1),
+    '/safe'(Q1, R1, S1),
+    *(O1, S1, T1),
+    +(N1, T1, U1),
+    invert(U1, V1),
+    +(M1, V1, W1),
+    -(W1, 1.0, X1),
+    invert(X1, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_transitiveSimilarity (stv $As $Ac)
+                               (stv $Bs $Bc)
+                               (stv $Cs $Cc)
+                               (stv $ABs $ABc)
+                               (stv $BCs $BCc))
+   (let* (($ConclS (TransitiveSimilarityStrength $As $Bs $Cs $ABs $BCs))
+          ($ConclC (* (* $ABc $BCc) (Truth_or $ABs $BCs))))
+         (stv $ConclS $ConclC)))
+[33m--> prolog clause -->
+[32m'Truth_transitiveSimilarity'([stv, A, _],
+                                  [stv, B, _],
+                                  [stv, C, _],
+                                  [stv, D, E],
+                                  [stv, F, G],
+                                  [stv, H, I]) :-
+    H=J,
+    'TransitiveSimilarityStrength'(A,
+                                   B,
+                                   C,
+                                   D,
+                                   F,
+                                   J),
+    I=K,
+    *(E, G, L),
+    (   'get-type'(D, 'Number')
+    *-> true
+    ;   'get-metatype'(D, 'Number')
+    ),
+    (   'get-type'(F, 'Number')
+    *-> true
+    ;   'get-metatype'(F, 'Number')
+    ),
+    'Truth_or'(D, F, M),
+    (   'get-type'(M, 'Number')
+    *-> true
+    ;   'get-metatype'(M, 'Number')
+    ),
+    *(L, M, K).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (simpleDeductionStrength $sA $sB $sC $sAB $sBC)
+   (if (and (conditional-probability-consistency $sA $sB $sAB)
+            (conditional-probability-consistency $sB $sC $sBC))
+              (if (< 0.99 $sB)
+                      $sC
+                      (+ (* $sAB $sBC) (/safe (* (- 1.0 $sAB) (- $sC (* $sB $sBC))) (- 1.0 $sB))))
+              (empty)))
+[33m--> prolog clause -->
+[32msimpleDeductionStrength(A, B, C, D, E, F) :-
+    (   'get-type'(A, 'Number')
+    *-> true
+    ;   'get-metatype'(A, 'Number')
+    ),
+    (   'get-type'(B, 'Number')
+    *-> true
+    ;   'get-metatype'(B, 'Number')
+    ),
+    (   'get-type'(D, 'Number')
+    *-> true
+    ;   'get-metatype'(D, 'Number')
+    ),
+    'conditional-probability-consistency'(A, B, D, G),
+    (   'get-type'(G, 'Bool')
+    *-> true
+    ;   'get-metatype'(G, 'Bool')
+    ),
+    (   'get-type'(B, 'Number')
+    *-> true
+    ;   'get-metatype'(B, 'Number')
+    ),
+    (   'get-type'(C, 'Number')
+    *-> true
+    ;   'get-metatype'(C, 'Number')
+    ),
+    (   'get-type'(E, 'Number')
+    *-> true
+    ;   'get-metatype'(E, 'Number')
+    ),
+    'conditional-probability-consistency'(B, C, E, H),
+    (   'get-type'(H, 'Bool')
+    *-> true
+    ;   'get-metatype'(H, 'Bool')
+    ),
+    and(G, H, I),
+    (   I==true
+    ->  <(0.99, B, J),
+        (   J==true
+        ->  F=C
+        ;   *(D, E, K),
+            -(1.0, D, L),
+            *(B, E, M),
+            -(C, M, N),
+            *(L, N, O),
+            -(1.0, B, P),
+            '/safe'(O, P, Q),
+            +(K, Q, F)
+        )
+    ;   empty(F)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (Truth_evaluationImplication (stv $As $Ac)
+                                (stv $Bs $Bc)
+                                (stv $Cs $Cc)
+                                (stv $ABs $ABc)
+                                (stv $ACs $ACc))
+   (let* (($ConclS (simpleDeductionStrength $Bs $As $Cs $ABs $ACs))
+          ($ConclC (* (* $ABs $ACs) (* $ABc $ACc))))
+         (stv $ConclS $ConclC)))
+[33m--> prolog clause -->
+[32m'Truth_evaluationImplication'([stv, A, _],
+                                   [stv, B, _],
+                                   [stv, C, _],
+                                   [stv, D, E],
+                                   [stv, F, G],
+                                   [stv, H, I]) :-
+    H=J,
+    simpleDeductionStrength(B, A, C, D, F, J),
+    I=K,
+    *(D, F, L),
+    *(E, G, M),
+    *(L, M, K).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ($T $T1) 
+       ($T $T2))
+   ($T (Truth_Revision $T1 $T2)))
+[33m--> prolog clause -->
+[32m'|-'([A, B], [A, C], D) :-
+    'Truth_Revision'(B, C, E),
+    reduce([A, E], D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ($A $T1) 
+       ((Implication $A $B) $T2))
+   ($B (Truth_ModusPonens $T1 $T2)))
+[33m--> prolog clause -->
+[32m'|-'([A, B], [['Implication', A, C], D], E) :-
+    'Truth_ModusPonens'(B, D, F),
+    reduce([C, F], E).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (SymmetricModusPonensRuleGuard Similarity) True)
+[33m--> prolog clause -->
+[32m'SymmetricModusPonensRuleGuard'('Similarity', true).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (SymmetricModusPonensRuleGuard IntentionalSimilarity) True)
+[33m--> prolog clause -->
+[32m'SymmetricModusPonensRuleGuard'('IntentionalSimilarity', true).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (SymmetricModusPonensRuleGuard ExtensionalSimilarity) True)
+[33m--> prolog clause -->
+[32m'SymmetricModusPonensRuleGuard'('ExtensionalSimilarity', true).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ($A $TruthA)
+       (($LinkType $A $B) $TruthAB))
+   (if (SymmetricModusPonensRuleGuard $LinkType)
+       ($B (Truth_SymmetricModusPonens $TruthA $TruthAB)) (empty)))
+[33m--> prolog clause -->
+[32m'|-'([A, B], [[C, A, D], E], F) :-
+    'SymmetricModusPonensRuleGuard'(C, G),
+    (   G==true
+    ->  'Truth_SymmetricModusPonens'(B, E, H),
+        reduce([D, H], F)
+    ;   empty(F)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (SyllogisticRuleGuard Inheritance) True)
+[33m--> prolog clause -->
+[32m'SyllogisticRuleGuard'('Inheritance', true).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (SyllogisticRuleGuard Implication) True)
+[33m--> prolog clause -->
+[32m'SyllogisticRuleGuard'('Implication', true).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- (($LinkType $A $B) $T1)
+       (($LinkType $B $C) $T2))
+   (if (SyllogisticRuleGuard $LinkType)
+       (($LinkType $A $C)
+        (Truth_Deduction (STV $A)
+                         (STV $B)
+                         (STV $C) $T1 $T2)) (empty)))
+[33m--> prolog clause -->
+[32m'|-'([[A, B, C], D],
+          [[A, C, E], F],
+          G) :-
+    'SyllogisticRuleGuard'(A, H),
+    (   H==true
+    ->  reduce([A, B, E], I),
+        'STV'(B, J),
+        'STV'(C, K),
+        'STV'(E, L),
+        'Truth_Deduction'(J, K, L, D, F, M),
+        reduce([I, M], G)
+    ;   empty(G)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- (($LinkType $C $A) $T1)
+       (($LinkType $C $B) $T2))
+   (if (SyllogisticRuleGuard $LinkType)
+       (($LinkType $A $B) (Truth_Induction (STV $A)
+                                           (STV $B)
+                                           (STV $C) $T1 $T2)) (empty)))
+[33m--> prolog clause -->
+[32m'|-'([[A, B, C], D],
+          [[A, B, E], F],
+          G) :-
+    'SyllogisticRuleGuard'(A, H),
+    (   H==true
+    ->  reduce([A, C, E], I),
+        'STV'(C, J),
+        'STV'(E, K),
+        'STV'(B, L),
+        'Truth_Induction'(J, K, L, D, F, M),
+        reduce([I, M], G)
+    ;   empty(G)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- (($LinkType $A $C) $T1)
+       (($LinkType $B $C) $T2))
+   (if (SyllogisticRuleGuard $LinkType)
+       (($LinkType $A $B) (Truth_Abduction (STV $A)
+                                           (STV $B)
+                                           (STV $C) $T1 $T2)) (empty)))
+[33m--> prolog clause -->
+[32m'|-'([[A, B, C], D],
+          [[A, E, C], F],
+          G) :-
+    'SyllogisticRuleGuard'(A, H),
+    (   H==true
+    ->  reduce([A, B, E], I),
+        'STV'(B, J),
+        'STV'(E, K),
+        'STV'(C, L),
+        'Truth_Abduction'(J, K, L, D, F, M),
+        reduce([I, M], G)
+    ;   empty(G)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Evaluation (Predicate $x)
+                    (List (Concept $C))) $T1)
+       ((Inheritance (Concept $S) (Concept $C)) $T2))
+   ((Evaluation (Predicate $x)
+                (List (Concept $S))) (Truth_ModusPonens $T1 $T2)))
+[33m--> prolog clause -->
+[32m'|-'([['Evaluation', A, ['List', ['Concept', B]]], C],
+          [['Inheritance', ['Concept', D], ['Concept', B]], E],
+          [['Evaluation', F, ['List', ['Concept', D]]], G]) :-
+    'Predicate'(H, A),
+    'Predicate'(H, F),
+    'Truth_ModusPonens'(C, E, G).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Evaluation (Predicate $x)
+                    (List (Concept $C1) (Concept $C2))) $T1)
+       ((Inheritance (Concept $S) (Concept $C1)) $T2))
+   ((Evaluation (Predicate $x)
+                (List (Concept $S) (Concept $C2))) (Truth_ModusPonens $T1 $T2)))
+[33m--> prolog clause -->
+[32m'|-'([ ['Evaluation', A, ['List', ['Concept', B], ['Concept', C]]],
+            D
+          ],
+          [['Inheritance', ['Concept', E], ['Concept', B]], F],
+          [ ['Evaluation', G, ['List', ['Concept', E], ['Concept', C]]],
+            H
+          ]) :-
+    'Predicate'(I, A),
+    'Predicate'(I, G),
+    'Truth_ModusPonens'(D, F, H).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Evaluation (Predicate $x)
+                    (List (Concept $C1) (Concept $C2))) $T1)
+       ((Inheritance (Concept $S) (Concept $C2)) $T2))
+   ((Evaluation (Predicate $x)
+                (List (Concept $C1) (Concept $S))) (Truth_ModusPonens $T1 $T2)))
+[33m--> prolog clause -->
+[32m'|-'([ ['Evaluation', A, ['List', ['Concept', B], ['Concept', C]]],
+            D
+          ],
+          [['Inheritance', ['Concept', E], ['Concept', C]], F],
+          [ ['Evaluation', G, ['List', ['Concept', B], ['Concept', E]]],
+            H
+          ]) :-
+    'Predicate'(I, A),
+    'Predicate'(I, G),
+    'Truth_ModusPonens'(D, F, H).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Not $A) $T)) ($A (Truth_Negation $T)))
+[33m--> prolog clause -->
+[32m'|-'([['Not', A], B], C) :-
+    'Truth_Negation'(B, D),
+    reduce([A, D], C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Inheritance $A $B) $Truth))
+   ((Inheritance $B $A) (Truth_inversion (STV $B) $Truth)))
+[33m--> prolog clause -->
+[32m'|-'([['Inheritance', A, B], C],
+          [['Inheritance', B, A], D]) :-
+    'STV'(B, E),
+    'Truth_inversion'(E, C, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Implication $A $B) $Truth))
+   ((Implication $B $A) (Truth_inversion (STV $B) $Truth)))
+[33m--> prolog clause -->
+[32m'|-'([['Implication', A, B], C],
+          [['Implication', B, A], D]) :-
+    'STV'(B, E),
+    'Truth_inversion'(E, C, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Equivalence $A $B) $Truth))
+   ((Implication $A $B) (Truth_equivalenceToImplication (STV $A)
+                                                        (STV $B) $Truth)))
+[33m--> prolog clause -->
+[32m'|-'([['Equivalence', A, B], C],
+          [['Implication', A, B], D]) :-
+    'STV'(A, E),
+    'STV'(B, F),
+    'Truth_equivalenceToImplication'(E, F, C, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Equivalence $A $B) $Truth))
+   ((Implication $B $A) (Truth_equivalenceToImplication (STV $A)
+                                                        (STV $B) $Truth)))
+[33m--> prolog clause -->
+[32m'|-'([['Equivalence', A, B], C],
+          [['Implication', B, A], D]) :-
+    'STV'(A, E),
+    'STV'(B, F),
+    'Truth_equivalenceToImplication'(E, F, C, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Similarity $A $B) $T1)
+       ((Similarity $B $C) $T2))
+   ((Similarity $A $C) (Truth_transitiveSimilarity (STV $A)
+                                                   (STV $B)
+                                                   (STV $C) $T1 $T2)))
+[33m--> prolog clause -->
+[32m'|-'([['Similarity', A, B], C],
+          [['Similarity', B, D], E],
+          [['Similarity', A, D], F]) :-
+    'STV'(A, G),
+    'STV'(B, H),
+    'STV'(D, I),
+    'Truth_transitiveSimilarity'(G,
+                                 H,
+                                 I,
+                                 C,
+                                 E,
+                                 F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Evaluation $A $B) $TruthAB)
+       ((Implication $A $C) $TruthAC))
+   ((Evaluation $C $B) (Truth_evaluationImplication (STV $A)
+                                                    (STV $B)
+                                                    (STV $C) $TruthAB $TruthAC)))
+[33m--> prolog clause -->
+[32m'|-'([['Evaluation', A, B], C],
+          [['Implication', A, D], E],
+          [['Evaluation', D, B], F]) :-
+    'STV'(A, G),
+    'STV'(B, H),
+    'STV'(D, I),
+    'Truth_evaluationImplication'(G,
+                                  H,
+                                  I,
+                                  C,
+                                  E,
+                                  F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (|- ((Member $A $B) $T1)
+       ((Inheritance $B $C) $T2))
+   ((Member $A $C) (Truth_Deduction (STV $A)
+                                    (STV $B)
+                                    (STV $C) $T1 $T2)))
+[33m--> prolog clause -->
+[32m'|-'([['Member', A, B], C],
+          [['Inheritance', B, D], E],
+          [['Member', A, D], F]) :-
+    'STV'(A, G),
+    'STV'(B, H),
+    'STV'(D, I),
+    'Truth_Deduction'(G, H, I, C, E, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Config.MaxSteps) 100)
+[33m--> prolog clause -->
+[32m'PLN.Config.MaxSteps'(100).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Config.TaskQueueSize) 10)
+[33m--> prolog clause -->
+[32m'PLN.Config.TaskQueueSize'(10).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Config.BeliefQueueSize) 100)
+[33m--> prolog clause -->
+[32m'PLN.Config.BeliefQueueSize'(100).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (StampDisjoint $Ev1 $Ev2)
+   (if (== $Ev1 ())
+       True
+       (let* (($x (car-atom $Ev1))
+              ($rest (cdr-atom $Ev1)))
+             (if (is-member $x $Ev2)
+                 False
+                 (StampDisjoint $rest $Ev2)))))
+[33m--> prolog clause -->
+[32m'StampDisjoint'(A, B, C) :-
+    ==(A, [], D),
+    (   D==true
+    ->  C=true
+    ;   E=F,
+        'car-atom'(A, F),
+        G=H,
+        'cdr-atom'(A, H),
+        'is-member'(E, B, I),
+        (   I==true
+        ->  C=false
+        ;   'StampDisjoint'(G, B, C)
+        )
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (StampConcat $stamp $addition)
+   (if (== $addition ())
+       $stamp
+       (msort (append $stamp $addition))))
+[33m--> prolog clause -->
+[32m'StampConcat'(A, B, C) :-
+    ==(B, [], D),
+    (   D==true
+    ->  C=A
+    ;   append(A, B, E),
+        msort(E, C)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (BestCandidate $evaluateCandidateFunction $bestCandidate $tuple)
+   (if (== $tuple ())
+       $bestCandidate
+       (let* (($head (car-atom $tuple))
+              ($tail (cdr-atom $tuple)))
+             (if (> ($evaluateCandidateFunction $head)
+                    ($evaluateCandidateFunction $bestCandidate))
+                 (BestCandidate $evaluateCandidateFunction $head $tail)
+                 (BestCandidate $evaluateCandidateFunction $bestCandidate $tail)))))
+[33m--> prolog clause -->
+[32m'BestCandidate'(A, B, C, D) :-
+    ==(C, [], E),
+    (   E==true
+    ->  D=B
+    ;   F=G,
+        'car-atom'(C, G),
+        H=I,
+        'cdr-atom'(C, I),
+        reduce([A, F], J),
+        reduce([A, B], K),
+        >(J, K, L),
+        (   L==true
+        ->  'BestCandidate'(A, F, H, D)
+        ;   'BestCandidate'(A, B, H, D)
+        )
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PriorityRank (Sentence ($x (stv $f $c)) $Ev1)) $c)
+[33m--> prolog clause -->
+[32m'PriorityRank'(['Sentence', [_, [stv, _, A]], _], A).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PriorityRank ()) -99999.0)
+[33m--> prolog clause -->
+[32m'PriorityRank'([], -99999.0).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PriorityRankNeg (Sentence ($x (stv $f $c)) $Ev1)) (- 0.0 $c))
+[33m--> prolog clause -->
+[32m'PriorityRankNeg'(['Sentence', [_, [stv, _, A]], _],
+                       B) :-
+    -(0.0, A, B).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PriorityRankNeg ()) -99999.0)
+[33m--> prolog clause -->
+[32m'PriorityRankNeg'([], -99999.0).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m-->  metta specialization (BestCandidate_Spec_[PriorityRankNeg])  -->
+[36m(= (BestCandidate_Spec_[PriorityRankNeg] PriorityRankNeg $_0 $_1) (if (== $_1 ()) $_0 (let* (($_2 (car-atom $_1)) ($_3 (cdr-atom $_1))) (if (> (PriorityRankNeg $_2) (PriorityRankNeg $_0)) (BestCandidate PriorityRankNeg $_2 $_3) (BestCandidate PriorityRankNeg $_0 $_3)))))
+[33m--> prolog clause -->
+[32m'BestCandidate_Spec_[PriorityRankNeg]'('PriorityRankNeg',
+                                            A,
+                                            B,
+                                            C) :-
+    ==(B, [], D),
+    (   D==true
+    ->  C=A
+    ;   E=F,
+        'car-atom'(B, F),
+        G=H,
+        'cdr-atom'(B, H),
+        'PriorityRankNeg'(E, I),
+        'PriorityRankNeg'(A, J),
+        >(I, J, K),
+        (   K==true
+        ->  'BestCandidate'('PriorityRankNeg', E, G, C)
+        ;   'BestCandidate'('PriorityRankNeg', A, G, C)
+        )
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (LimitSize $L $size)
+   (if (< (length $L) $size)
+       $L
+       (let $lowestPriorityItem (BestCandidate PriorityRankNeg () $L)
+            (LimitSize (exclude-item $lowestPriorityItem $L) $size))))
+[33m--> prolog clause -->
+[32m'LimitSize'(A, B, C) :-
+    length(A, D),
+    <(D, B, E),
+    (   E==true
+    ->  C=A
+    ;   F=G,
+        'BestCandidate_Spec_[PriorityRankNeg]'('PriorityRankNeg',
+                                               [],
+                                               A,
+                                               G),
+        'exclude-item'(F, A, H),
+        'LimitSize'(H, B, C)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m-->  metta specialization (BestCandidate_Spec_[PriorityRank])  -->
+[36m(= (BestCandidate_Spec_[PriorityRank] PriorityRank $_0 $_1) (if (== $_1 ()) $_0 (let* (($_2 (car-atom $_1)) ($_3 (cdr-atom $_1))) (if (> (PriorityRank $_2) (PriorityRank $_0)) (BestCandidate PriorityRank $_2 $_3) (BestCandidate PriorityRank $_0 $_3)))))
+[33m--> prolog clause -->
+[32m'BestCandidate_Spec_[PriorityRank]'('PriorityRank', A, B, C) :-
+    ==(B, [], D),
+    (   D==true
+    ->  C=A
+    ;   E=F,
+        'car-atom'(B, F),
+        G=H,
+        'cdr-atom'(B, H),
+        'PriorityRank'(E, I),
+        'PriorityRank'(A, J),
+        >(I, J, K),
+        (   K==true
+        ->  'BestCandidate'('PriorityRank', E, G, C)
+        ;   'BestCandidate'('PriorityRank', A, G, C)
+        )
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Derive $Tasks $Beliefs $steps $maxsteps $taskqueuesize $beliefqueuesize)
+   (if (or (> $steps $maxsteps) (== $Tasks ()))
+       ($Tasks $Beliefs)
+       (let (Sentence $x $Ev1) (BestCandidate PriorityRank () $Tasks)
+            (let $derivations
+                 (collapse (superpose ((let* (((Sentence $y $Ev2) (superpose $Beliefs)))
+                                             (if (StampDisjoint $Ev1 $Ev2)
+                                                 (let $stamp (msort (append $Ev1 $Ev2))
+                                                      (superpose ((case (|- $x $y)
+                                                                    ((($Txy $TVxy) (Sentence ($Txy $TVxy) $stamp))))
+                                                                  (case (|- $y $x)
+                                                                    ((($Tyx $TVyx) (Sentence ($Tyx $TVyx) $stamp)))))))
+                                                 (empty)))
+                                       (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
+                 (progn (println! (SELECTED (Sentence $x $Ev1)))
+                        (PLN.Derive (LimitSize (exclude-item (Sentence $x $Ev1) (ConcatUnique $Tasks $derivations)) $taskqueuesize)
+                                    (LimitSize (ConcatUnique $Beliefs $derivations) $beliefqueuesize)
+                                    (+ $steps 1)
+                                    $maxsteps
+                                    $taskqueuesize
+                                    $beliefqueuesize))))))
+[33m--> prolog clause -->
+[32m'PLN.Derive'(A, B, C, D, E, F, G) :-
+    >(C, D, H),
+    ==(A, [], I),
+    or(H, I, J),
+    (   J==true
+    ->  reduce([A, B], G)
+    ;   K=['Sentence', L, M],
+        'BestCandidate_Spec_[PriorityRank]'('PriorityRank', [], A, K),
+        N=O,
+        findall(P,
+                (   ['Sentence', Q, R]=S,
+                    superpose(B, S),
+                    'StampDisjoint'(M, R, T),
+                    (   T==true
+                    ->  U=V,
+                        append(M, R, W),
+                        msort(W, V),
+                        (   '|-'(L, Q, X),
+                            (   X=[Y, Z]
+                            ->  ['Sentence', A1, U]=P,
+                                reduce([Y, Z], A1)
+                            )
+                        ;   '|-'(Q, L, B1),
+                            (   B1=[C1, D1]
+                            ->  ['Sentence', E1, U]=P,
+                                reduce([C1, D1], E1)
+                            )
+                        )
+                    ;   empty(P)
+                    )
+                ;   '|-'(L, F1),
+                    (   F1=[G1, H1]
+                    ->  ['Sentence', I1, M]=P,
+                        reduce([G1, H1], I1)
+                    )
+                ),
+                O),
+        'println!'(['SELECTED', ['Sentence', L, M]], _),
+        'ConcatUnique'(A, N, J1),
+        'exclude-item'(['Sentence', L, M], J1, K1),
+        'LimitSize'(K1, E, L1),
+        'ConcatUnique'(B, N, M1),
+        'LimitSize'(M1, F, N1),
+        +(C, 1, O1),
+        'PLN.Derive'(L1, N1, O1, D, E, F, G)
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
+   (PLN.Derive $Tasks $Beliefs 1 $maxsteps $taskqueuesize $beliefqueuesize))
+[33m--> prolog clause -->
+[32m'PLN.Derive'(A, B, C, D, E, F) :-
+    'PLN.Derive'(A, B, 1, C, D, E, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Derive $Tasks $Beliefs $maxsteps)
+   (PLN.Derive $Tasks $Beliefs $maxsteps (PLN.Config.TaskQueueSize) (PLN.Config.BeliefQueueSize)))
+[33m--> prolog clause -->
+[32m'PLN.Derive'(A, B, C, D) :-
+    'PLN.Config.TaskQueueSize'(E),
+    'PLN.Config.BeliefQueueSize'(F),
+    'PLN.Derive'(A, B, C, E, F, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Derive $Tasks $Beliefs)
+   (PLN.Derive $Tasks $Beliefs (PLN.Config.MaxSteps)))
+[33m--> prolog clause -->
+[32m'PLN.Derive'(A, B, C) :-
+    'PLN.Config.MaxSteps'(D),
+    'PLN.Derive'(A, B, D, C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (ConfidenceRank ((stv $f $c) $Ev)) $c)
+[33m--> prolog clause -->
+[32m'ConfidenceRank'([[stv, _, A], _], A).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (ConfidenceRank ()) 0)
+[33m--> prolog clause -->
+[32m'ConfidenceRank'([], 0).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m-->  metta specialization (BestCandidate_Spec_[ConfidenceRank])  -->
+[36m(= (BestCandidate_Spec_[ConfidenceRank] ConfidenceRank $_0 $_1) (if (== $_1 ()) $_0 (let* (($_2 (car-atom $_1)) ($_3 (cdr-atom $_1))) (if (> (ConfidenceRank $_2) (ConfidenceRank $_0)) (BestCandidate ConfidenceRank $_2 $_3) (BestCandidate ConfidenceRank $_0 $_3)))))
+[33m--> prolog clause -->
+[32m'BestCandidate_Spec_[ConfidenceRank]'('ConfidenceRank',
+                                           A,
+                                           B,
+                                           C) :-
+    ==(B, [], D),
+    (   D==true
+    ->  C=A
+    ;   E=F,
+        'car-atom'(B, F),
+        G=H,
+        'cdr-atom'(B, H),
+        'ConfidenceRank'(E, I),
+        'ConfidenceRank'(A, J),
+        >(I, J, K),
+        (   K==true
+        ->  'BestCandidate'('ConfidenceRank', E, G, C)
+        ;   'BestCandidate'('ConfidenceRank', A, G, C)
+        )
+    ).
+[33m^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (BestConfidenceCandidate $tuple)
+   (BestCandidate ConfidenceRank () $tuple))
+[33m--> prolog clause -->
+[32m'BestConfidenceCandidate'(A, B) :-
+    'BestCandidate_Spec_[ConfidenceRank]'('ConfidenceRank', [], A, B).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Query $Tasks $Beliefs $term $maxsteps $taskqueuesize $beliefqueuesize)
+   (BestConfidenceCandidate
+    (collapse (let ($TasksRet $BeliefsRet) (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
+                    (case (superpose $BeliefsRet)
+                          (((Sentence ($Term $TV) $Ev) (case (== $Term $term)
+                                                             ((True ($TV $Ev)))))))))))
+[33m--> prolog clause -->
+[32m'PLN.Query'(A, B, C, D, E, F, G) :-
+    findall(H,
+            ( I=J,
+              reduce([_, K], I),
+              'PLN.Derive'(A, B, D, E, F, J),
+              superpose(K, L),
+              (   L=['Sentence', [M, N], O]
+              ->  ==(M, C, P),
+                  (   P=true
+                  ->  reduce([N, O], H)
+                  )
+              )
+            ),
+            Q),
+    'BestConfidenceCandidate'(Q, G).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Query $kb $term $maxsteps $taskqueuesize $beliefqueuesize)
+   (PLN.Query $kb $kb $term $maxsteps $taskqueuesize $beliefqueuesize))
+[33m--> prolog clause -->
+[32m'PLN.Query'(A, B, C, D, E, F) :-
+    'PLN.Query'(A, A, B, C, D, E, F).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Query $kb $term $maxsteps)
+   (PLN.Query $kb $term $maxsteps (PLN.Config.TaskQueueSize) (PLN.Config.BeliefQueueSize)))
+[33m--> prolog clause -->
+[32m'PLN.Query'(A, B, C, D) :-
+    'PLN.Config.TaskQueueSize'(E),
+    'PLN.Config.BeliefQueueSize'(F),
+    'PLN.Query'(A, B, C, E, F, D).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (PLN.Query $kb $term)
+   (PLN.Query $kb $term (PLN.Config.MaxSteps)))
+[33m--> prolog clause -->
+[32m'PLN.Query'(A, B, C) :-
+    'PLN.Config.MaxSteps'(D),
+    'PLN.Query'(A, B, D, C).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C3) (stv 0.607143 0.857143))
+[33m--> prolog clause -->
+[32m'STV'('C3', [stv, 0.607143, 0.857143]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C4) (stv 0.600000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C4', [stv, 0.6, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C5) (stv 0.607143 0.857143))
+[33m--> prolog clause -->
+[32m'STV'('C5', [stv, 0.607143, 0.857143]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C8) (stv 0.600000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C8', [stv, 0.6, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C10) (stv 0.600000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C10', [stv, 0.6, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C12) (stv 0.600000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C12', [stv, 0.6, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C15) (stv 0.600000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C15', [stv, 0.6, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C20) (stv 0.600000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C20', [stv, 0.6, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C6) (stv 0.500000 0.869561))
+[33m--> prolog clause -->
+[32m'STV'('C6', [stv, 0.5, 0.869561]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C9) (stv 0.500000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C9', [stv, 0.5, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C11) (stv 0.500000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C11', [stv, 0.5, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C13) (stv 0.500000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C13', [stv, 0.5, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C16) (stv 0.500000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C16', [stv, 0.5, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C17) (stv 0.500000 0.869561))
+[33m--> prolog clause -->
+[32m'STV'('C17', [stv, 0.5, 0.869561]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C18) (stv 0.500000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C18', [stv, 0.5, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C19) (stv 0.500000 0.869561))
+[33m--> prolog clause -->
+[32m'STV'('C19', [stv, 0.5, 0.869561]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C1) (stv 0.392857 0.857143))
+[33m--> prolog clause -->
+[32m'STV'('C1', [stv, 0.392857, 0.857143]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C2) (stv 0.400000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C2', [stv, 0.4, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C7) (stv 0.400000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('C7', [stv, 0.4, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV C14) (stv 0.392857 0.857143))
+[33m--> prolog clause -->
+[32m'STV'('C14', [stv, 0.392857, 0.857143]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (STV GroupX) (stv 0.500000 0.800000))
+[33m--> prolog clause -->
+[32m'STV'('GroupX', [stv, 0.5, 0.8]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta function -->
+[36m(= (kb)
+  (
+    (Sentence ((Similarity C6 C19) (stv 1.000000 0.800000)) (101))
+  )
+)
+[33m--> prolog clause -->
+[32mkb([['Sentence', [['Similarity', 'C6', 'C19'], [stv, 1.0, 0.8]], [101]]]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(PLN.Query (kb) (Similarity C6 C19))
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           ( kb(B),
+             'PLN.Query'(B, ['Similarity', 'C6', 'C19'], A)
+           ),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m(SELECTED (Sentence ((Similarity C6 C19) (stv 1.0 0.8)) (101)))
+[33m--> metta function -->
+[36m(= (deduction_kb)
+  (
+    (Sentence ((Inheritance C1 C2) (stv 0.900000 0.800000)) (201))
+    (Sentence ((Inheritance C2 C3) (stv 0.800000 0.800000)) (202))
+  )
+)
+[33m--> prolog clause -->
+[32mdeduction_kb([ ['Sentence', [['Inheritance', 'C1', 'C2'], [stv, 0.9, 0.8]], [201]],
+                    ['Sentence', [['Inheritance', 'C2', 'C3'], [stv, 0.8, 0.8]], [202]]
+                  ]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(PLN.Query (deduction_kb) (Inheritance C1 C3))
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           ( deduction_kb(B),
+             'PLN.Query'(B, ['Inheritance', 'C1', 'C3'], A)
+           ),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9 0.8)) (201)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.8 0.8)) (202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.46080000000000015)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C2) (stv 0.8 0.41142863999999996)) (202)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9 0.384)) (201)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.23698289664000005)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.22853115264279159)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.2165956380045124)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7462676431574086 0.20843136457050443)) (201 202)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.8 0.19748574719999998)) (202)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9 0.19748574719999998)) (201)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 1.1980175218639302 0.19727716414076554)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.12187693858481974)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.11753032666182017)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.1137517903872)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.11139206096766106)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7462676431574086 0.10719329107323353)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C2) (stv 0.8 0.10156411548734974)) (202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 1.1980175218639302 0.1014568441818649)) (201 202)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9 0.09479315865599999)) (201)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.06814311836008194)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.06814311836008193)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.0638904803174361)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.06267957886164488)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7462676431574086 0.0610337754069079)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.06044417807153551)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.05850093052071345)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.05728735518840234)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 1.1980175218639302 0.05719758038033147)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.035045038140309424)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.03504503814030942)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.03285796678243688)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.032235217358524124)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7462676431574086 0.03138880401216195)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.031085582474862098)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.03008619785358953)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.029462073292951644)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 1.1980175218639302 0.029415903383963073)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.018023165476019544)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.01802316547601954)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.016898385733078978)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.016578114547402465)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7462676431574086 0.01614281618243792)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.01598687365155043)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.015472904332091576)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.01515192593312427)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 1.1980175218639302 0.015128181404544156)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.009269058075367091)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.00926905807536709)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.008690599825445108)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.008525888902502514)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7462676431574086 0.008302021134638031)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.008221822105386535)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.007957494982753182)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.0077924203500575615)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 1.1980175218639302 0.007780208876181114)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.004766944947536624)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.004469452083708897)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.004384743594934628)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7462676431574086 0.004269611580844227)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.004228366358926398)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.004092426673201206)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.004007531133665633)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 1.1980175218639302 0.004001250946053905)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.0024515720958998306)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.002298575740431897)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.0022550113675158306)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7462676431574086 0.002195800607543738)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.0021745887755935493)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.0021046769255686206)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.002061016355102137)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 1.1980175218639302 0.0020577865437920893)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.0012608087165975209)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.0011821248635286105)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.001159720325151973)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7462676431574086 0.0011292690720911172)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.001118360128127149)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.0010824054564075986)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.0010599514449967865)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 1.1980175218639302 0.0010582903989033495)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.0006484160194623293)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.0006079500311397023)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.0005964276951970425)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7462676431574086 0.0005807670481556378)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.0005751567331819733)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.0005566657560729469)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.0005451179768513284)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 1.1980175218639302 0.0005442637244323283)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.0003334711513019996)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.0003126600681247067)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.00030673429436656717)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7462676431574086 0.00029868024597436073)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.4947164733326379 0.0002957949406498777)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.7678571666666667 0.0002862852936945804)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.502768004233764 0.0002803464348193669)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 1.1980175218639302 0.00027990710493065946)) (201 202)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.4947164733326379 0.00017149947782426988)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.502768004233764 0.00016079663326356927)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7678571666666667 0.00015774909196574548)) (201 202)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.7462676431574086 0.00015360700924512089)) (201 202)))
+[33m--> metta function -->
+[36m(= (induction_kb)
+  (
+    (Sentence ((Inheritance GroupX C1) (stv 0.900000 0.800000)) (301))
+    (Sentence ((Inheritance GroupX C2) (stv 0.800000 0.800000)) (302))
+  )
+)
+[33m--> prolog clause -->
+[32minduction_kb([ ['Sentence', [['Inheritance', 'GroupX', 'C1'], [stv, 0.9, 0.8]], [301]],
+                    ['Sentence', [['Inheritance', 'GroupX', 'C2'], [stv, 0.8, 0.8]], [302]]
+                  ]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(PLN.Query (induction_kb) (Inheritance C1 C2))
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           ( induction_kb(B),
+             'PLN.Query'(B, ['Inheritance', 'C1', 'C2'], A)
+           ),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m(SELECTED (Sentence ((Inheritance GroupX C1) (stv 0.9 0.8)) (301)))
+(SELECTED (Sentence ((Inheritance GroupX C2) (stv 0.8 0.8)) (302)))
+(SELECTED (Sentence ((Inheritance C1 GroupX) (stv 0.9 0.41142863999999996)) (301)))
+(SELECTED (Sentence ((Inheritance C2 GroupX) (stv 0.8 0.384)) (302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.3654822335025381)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.3386243386243387)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.23698289664000002)) (301 302)))
+(SELECTED (Sentence ((Inheritance GroupX C1) (stv 0.9 0.19748574719999998)) (301)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.1879623228426396)) (301 302)))
+(SELECTED (Sentence ((Inheritance GroupX C2) (stv 0.8 0.18432)) (302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.1625396825396826)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.12448871956682894)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9166666666666666 0.12448871956682891)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.11716180940865381)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.11375179038720001)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9328345539467606 0.11220871959570379)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.11220871959570379)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.10551745457459842)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 GroupX) (stv 0.9 0.10156411548734974)) (301)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.08359185066666669)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.06402278073340227)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.060254654881177046)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9166666666666666 0.059754585392077876)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.058500930520713465)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.05850093052071346)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9328345539467606 0.0577073511242522)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.05386018540593782)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.050648378195807246)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.040124088320000015)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.03073093475203309)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9166666666666666 0.030730934752033087)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.02892223434296498)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.028080446649942466)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.02808044664994246)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9328345539467606 0.027699528539641055)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.027699528539641055)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.026047741699133285)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.020635248860921863)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.01580448336369714)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.01487429442685922)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9166666666666666 0.014750848680975882)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.014441374969722979)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.014441374969722977)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9328345539467606 0.01424547419463213)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.013295773699027706)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.012502916015583976)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.009904919453242495)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.007586152014574627)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9166666666666666 0.007586152014574626)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.007139661324892426)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.00693185998546703)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.0069318599854670294)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.0068378276134234235)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9328345539467606 0.006837827613423423)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.006430072165407417)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.005093959424946379)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.003901450257737123)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.003671826436201361)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9166666666666666 0.0036413529669958203)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.0035649571581139)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.0035649571581138993)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9328345539467606 0.0035165976444315556)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.0032821572544432433)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.0030864346393955602)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.002445100523974262)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.0018726961237138192)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9166666666666666 0.001872696123713819)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.0017624766893766534)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.001711179435894672)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.0017111794358946717)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.0016879668693271469)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9328345539467606 0.0016879668693271467)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.0015873095076692572)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.0012574804790525223)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.0009631010241410604)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.0009064167341774238)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9166666666666666 0.0008988941393826332)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.0008800352851326401)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.0008800352851326399)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9328345539467606 0.0008680973917654071)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.0008102240972770306)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.0007619085636812434)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.0006035906299452108)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.00046228849158770906)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9166666666666666 0.000462288491587709)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7588233743945002 0.0004350800324051634)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.00042241693686366727)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7200000000000001 0.00042241693686366716)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.0004166867480473955)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9328345539467606 0.0004166867480473954)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.0003918387551996592)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7581819847934491 0.0003104180899938767)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.00023774840672697822)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7588233743945002 0.0002237554825295154)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9166666666666666 0.00022189847596210032)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.0002172430323084806)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7200000000000001 0.00021724303230848054)) (301 302)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9328345539467606 0.00021429607756895316)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.00020000963906274986)) (301 302)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7581819847934491 0.00018808260249583643)) (301 302)))
+[33m--> metta function -->
+[36m(= (abduction_kb)
+  (
+    (Sentence ((Inheritance C1 C3) (stv 0.600000 0.800000)) (401))
+    (Sentence ((Inheritance C2 C3) (stv 0.600000 0.800000)) (402))
+  )
+)
+[33m--> prolog clause -->
+[32mabduction_kb([ ['Sentence', [['Inheritance', 'C1', 'C3'], [stv, 0.6, 0.8]], [401]],
+                    ['Sentence', [['Inheritance', 'C2', 'C3'], [stv, 0.6, 0.8]], [402]]
+                  ]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(PLN.Query (abduction_kb) (Inheritance C1 C2))
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           ( abduction_kb(B),
+             'PLN.Query'(B, ['Inheritance', 'C1', 'C2'], A)
+           ),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.6 0.8)) (401)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.6 0.8)) (402)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.6 0.41142863999999996)) (401)))
+(SELECTED (Sentence ((Inheritance C3 C2) (stv 0.6 0.41142863999999996)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.27745664739884396)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.27745664739884396)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.6 0.21159190726531196)) (401)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.6 0.19748574719999998)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.14269201387283237)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.1331791907514451)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.389090686942068 0.11849144832)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.3963635623140227 0.11849144832)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.6 0.10881871330146677)) (401)))
+(SELECTED (Sentence ((Inheritance C3 C2) (stv 0.6 0.10156411548734974)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.09219991288697357)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.09219991288697357)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.6048320307958752 0.09219991288697356)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.06849216665895955)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.06849216665895953)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.389090686942068 0.060938469292409855)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.3963635623140227 0.05687589519360001)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.6 0.05596391902521547)) (401)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.6 0.048750775433927876)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.04741710595900751)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.6048320307958752 0.047417105959007506)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.04425595818574732)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.03522454872393633)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.032876239996300585)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.3963635623140227 0.029250465260356732)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.389090686942068 0.02925046526035673)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.6 0.028781448867018153)) (401)))
+(SELECTED (Sentence ((Inheritance C3 C2) (stv 0.6 0.025071831544657943)) (402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.022760210860323607)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.022760210860323607)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.6048320307958752 0.022760210860323603)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.016907783387489442)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.016907783387489436)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.389090686942068 0.015043098926794767)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.6 0.014801890455733524)) (401)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.3963635623140227 0.014040223324971233)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.6 0.012034479141435813)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.011705253250470213)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.6048320307958752 0.011705253250470211)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.010924901212955331)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.008695432905661713)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.008115736025994932)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.6 0.007612402074539279)) (401)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.3963635623140227 0.0072206874848614894)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.389090686942068 0.007220687484861488)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C2) (stv 0.6 0.00618916173283663)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.005618521560225703)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.005618521560225702)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.6048320307958752 0.005618521560225701)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.004173807794717624)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.004173807794717622)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.6 0.003914950290826093)) (401)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.389090686942068 0.0037134970397019774)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.3963635623140227 0.003465929992733515)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.6 0.0029707976317615826)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.002889525855417923)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.6048320307958752 0.002889525855417923)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.0026968903489083375)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.002146530080752588)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.6 0.0020134033422777296)) (401)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.0020034277414644596)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.3963635623140227 0.00178247857905695)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.389090686942068 0.0017824785790569492)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C2) (stv 0.6 0.0015278390366886107)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.0013869724106006034)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.0013869724106006032)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.6048320307958752 0.0013869724106006032)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.6 0.001035464748605976)) (401)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.0010303344387612428)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.0010303344387612423)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.389090686942068 0.0009167034220131663)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.3963635623140227 0.000855589717947336)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.6 0.0007333627376105332)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.0007133002157636597)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.6048320307958752 0.0007133002157636597)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.0006657467570882897)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.6 0.0005325248166086233)) (401)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.0005298863711058765)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.0004945605306053965)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.3963635623140227 0.00044001764256632004)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.389090686942068 0.0004400176425663198)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C2) (stv 0.6 0.0003771580422022231)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.00034238410356655675)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.00034238410356655664)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.6048320307958752 0.00034238410356655664)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C3) (stv 0.6 0.00027386995132941915)) (401)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7083335 0.00025434545813082083)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.716363969586898 0.0002543454581308208)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.389090686942068 0.00022629482532133386)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.3963635623140227 0.00021120846843183363)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C3) (stv 0.6 0.0001810358602570671)) (402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.00017608328261000942)) (401 402)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.6048320307958752 0.00017608328261000942)) (401 402)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7083335 0.00016434436971194722)) (401 402)))
+(SELECTED (Sentence ((Inheritance C3 C1) (stv 0.6 0.00014084742701541138)) (401)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.716363969586898 0.00013080625741117568)) (401 402)))
+[33m--> metta function -->
+[36m(= (revision_kb)
+  (
+    (Sentence ((Inheritance C1 C2) (stv 0.700000 0.600000)) (501))
+    (Sentence ((Inheritance C1 C2) (stv 0.900000 0.800000)) (502))
+  )
+)
+[33m--> prolog clause -->
+[32mrevision_kb([ ['Sentence', [['Inheritance', 'C1', 'C2'], [stv, 0.7, 0.6]], [501]],
+                   ['Sentence', [['Inheritance', 'C1', 'C2'], [stv, 0.9, 0.8]], [502]]
+                 ]).
+[33m^^^^^^^^^^^^^^^^^^^^^^
+[0m[33m--> metta runnable  -->
+[36m!(PLN.Query (revision_kb) (Inheritance C1 C2))
+[33m-->  prolog goal  -->[35m 
+:- findall(A,
+           ( revision_kb(B),
+             'PLN.Query'(B, ['Inheritance', 'C1', 'C2'], A)
+           ),
+           _).
+[33m^^^^^^^^^^^^^^^^^^^^^^^
+[0m(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9 0.8)) (502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8454545454545453 0.8461538461538461)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7 0.6)) (501)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8454545454545453 0.8461538461538461)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8454545454545453 0.40615384615384614)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.9 0.384)) (502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8212947189097104 0.5068719867597323)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.30167597765363136)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6464285 0.30167597765363136)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7 0.288)) (501)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8212947189097104 0.5068719867597323)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8212947189097104 0.26067706520831835)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.25149700598802394)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.25149700598802394)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8454545454545453 0.20887915569230767)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.9 0.19748574719999998)) (502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7281869392104168 0.6358450516353815)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.7281869392104168 0.30520562478498314)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8171966516590505 0.2957499507391338)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7281869392104168 0.15696291890704486)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.1551476715083799)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.7 0.14811431039999998)) (501)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8916688079005333 0.8067209471816341)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8916688079005333 0.3872260546471844)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8171966516590505 0.2957499507391338)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8916688079005333 0.19914486129507092)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.145152)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8171966516590505 0.14195997635478422)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.12934133892215569)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8212947189097104 0.1251249912999928)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.12071856287425149)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8454545454545453 0.10026199473230768)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.09636564873028676)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8916688079005333 0.09558953342163404)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.0746496124416)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8171966516590505 0.07300800000760128)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.06651841396065197)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8212947189097104 0.06435000625070983)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.05794491017964072)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8454545454545453 0.05156332017050064)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.04955948474977451)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8916688079005333 0.0491603396673718)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.0383912356542182)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8171966516590505 0.035043840003648616)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.03420947573848507)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8212947189097104 0.03088800300034072)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.02781355688622755)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.02548773926212558)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8454545454545453 0.024750393681840305)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8916688079005333 0.023596963040338467)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.01974406734141813)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8171966516590505 0.01802254929134843)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.017593447597747384)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8212947189097104 0.015885261333432626)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.013350507305389224)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.013107982376613663)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8454545454545453 0.012728776014980186)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8916688079005333 0.0121355830147709)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.010154093467935096)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.00904806027256559)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8171966516590505 0.008650823659847246)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8212947189097104 0.00762492544004766)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.006741249202942658)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.006408243506586828)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8454545454545453 0.006109812487190489)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8916688079005333 0.005825079847090032)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.005222106082431776)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.004653288915724613)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8171966516590505 0.004448995766563469)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8212947189097104 0.003921390879875263)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.003466928739334727)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8454545454545453 0.0031421898028247503)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.0030759568831616774)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8916688079005333 0.0029957558492245745)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.002685655004288292)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.002393120412654565)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8171966516590505 0.002135517967950465)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8212947189097104 0.0018822676223401264)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.0017829922202517515)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8454545454545453 0.0015082511053558802)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.0014764593039176051)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8916688079005333 0.0014379628076277957)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.0013811942324044077)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.001230747845918383)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8171966516590505 0.0010982665665617791)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8212947189097104 0.0009680235099692897)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.0009169675803859483)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8454545454545453 0.0007756721263188331)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C2) (stv 0.8916688079005333 0.000739523852891107)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.0007103285807674867)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.0007087004658804505)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.0006329561405364123)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8171966516590505 0.000527167951949654)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.00047158340565285167)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8212947189097104 0.0004646512847852591)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8454545454545453 0.00037232262063303993)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6488095 0.0003653119024228715)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C1) (stv 0.8916688079005333 0.0003549714493877314)) (501 502)))
+(SELECTED (Sentence ((Inheritance C2 C2) (stv 0.6488095 0.0003401762236226163)) (501 502)))
+(SELECTED (Sentence ((Inheritance C1 C1) (stv 0.6612194799426636 0.0003255203551006812)) (501 502)))
+true
+true
+true
+((stv 1.0 0.8) (101))
+((stv 0.7678571666666667 0.46080000000000015) (201 202))
+((stv 0.7581819847934491 0.3386243386243387) (301 302))
+((stv 0.7083335 0.27745664739884396) (401 402))
+((stv 0.8454545454545453 0.8461538461538461) (501 502))
