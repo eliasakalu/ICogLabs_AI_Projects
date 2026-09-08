@@ -1,3 +1,8 @@
+import argparse
+import subprocess
+from itertools import permutations
+from pathlib import Path
+
 from parity_tools import (
     evaluate_all_candidates, calculate_weighted_evidence, truth_table, ROW_WEIGHTS,
 )
@@ -32,16 +37,61 @@ def relation_stv(results, source, target, rows):
     return f"(stv {(success + 1) / (evidence + 2):.6f} {evidence / (evidence + 2):.6f})"
 
 
+def select_rule_examples(results, beta_nodes):
+    """Choose supported premises from the current candidates, with stable ties."""
+    names = sorted(beta_nodes)
+    rows = range(len(truth_table))
+    if set(results) != set(beta_nodes):
+        raise ValueError("Candidate results and Beta nodes must have the same names")
+    if len(ROW_WEIGHTS) != len(rows) or any(w < 0 for w in ROW_WEIGHTS):
+        raise ValueError("Provide one nonnegative weight per truth-table row")
+
+    def support(source, target, indices):
+        source_rows = [i for i in indices
+                       if results[source]["outputs"][i] == truth_table[i][3]]
+        evidence = sum(ROW_WEIGHTS[i] for i in source_rows)
+        matches = sum(ROW_WEIGHTS[i] for i in source_rows
+                      if results[target]["outputs"][i] == truth_table[i][3])
+        return evidence, matches
+
+    full = {(a, b): support(a, b, rows) for a, b in permutations(names, 2)}
+    selected = {}
+
+    def consider(label, premises, query, supports):
+        if any(evidence <= 0 or matches <= 0 for evidence, matches in supports):
+            return
+        score = (min(e for e, _ in supports), sum(m for _, m in supports))
+        if label not in selected or score > selected[label][0]:
+            selected[label] = (score, premises, query)
+
+    for a, b, c in permutations(names, 3):
+        consider("Deduction", ((a, b), (b, c)), (a, c), (full[a, b], full[b, c]))
+        consider("Induction", ((c, a), (c, b)), (a, b), (full[c, a], full[c, b]))
+        consider("Abduction", ((a, c), (b, c)), (a, b), (full[a, c], full[b, c]))
+    for a, b in permutations(names, 2):
+        consider("Revision", ((a, b), (a, b)), (a, b),
+                 (support(a, b, rows[::2]), support(a, b, rows[1::2])))
+
+    examples = []
+    for index, label in enumerate(("Deduction", "Induction", "Abduction", "Revision"), 2):
+        if label in selected:
+            _, premises, query = selected[label]
+            examples.append((label, premises, query, index * 100 + 1))
+        else:
+            print(f"{label}: skipped because no supported example is available")
+    return examples
+
+
 def write_pln_stvs_and_relations(
     final_beta_nodes,
     edges,
-    output_file="./pln_rules.metta"
+    output_file="./pln_rules.metta",
+    results=None,
 ):
-    results = evaluate_all_candidates()
+    if results is None:
+        results = evaluate_all_candidates()
     rows = range(len(truth_table))
-    required = {"C1", "C2", "C3"}
-    if not required.issubset(final_beta_nodes):
-        raise ValueError("The PLN rule examples require candidates C1, C2, and C3")
+    examples = select_rule_examples(results, final_beta_nodes)
 
     with open(output_file, "w") as f:
         # PLN imports
@@ -61,13 +111,6 @@ def write_pln_stvs_and_relations(
                 f"(= (STV {name}) "
                 f"(stv {strength:.6f} {confidence:.6f}))\n"
             )
-
-        # GroupX denotes all evaluated input rows.
-        total_weight = sum(ROW_WEIGHTS)
-        f.write(
-            f"(= (STV GroupX) (stv 1.000000 "
-            f"{total_weight / (total_weight + 2):.6f}))\n\n"
-        )
 
         # Graph KB
         f.write("; Graph KB\n")
@@ -107,15 +150,10 @@ def write_pln_stvs_and_relations(
             )
 
         # Relation evidence comes from correctness on the input rows.
-        examples = (
-            ("Deduction", (("C1", "C2"), ("C2", "C3")), ("C1", "C3"), 201),
-            ("Induction", (("GroupX", "C1"), ("GroupX", "C2")), ("C1", "C2"), 301),
-            ("Abduction", (("C1", "C3"), ("C2", "C3")), ("C1", "C2"), 401),
-            ("Revision", (("C1", "C2"), ("C1", "C2")), ("C1", "C2"), 501),
-        )
         f.write("; Inheritance X Y estimates Y correctness given X correctness.\n")
         f.write("; Candidate STVs above retain the approximate graph beliefs.\n")
         for label, premises, query, first_stamp in examples:
+            print(f"{label}: {premises[0]} + {premises[1]} -> {query}")
             kb = label.lower() + "_kb"
             f.write(f"\n; {label}\n(= ({kb})\n  (\n")
             for offset, (source, target) in enumerate(premises):
@@ -130,6 +168,11 @@ def write_pln_stvs_and_relations(
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run-pln", action="store_true", help="Also execute the generated PLN queries")
+    args = parser.parse_args()
+    project_dir = Path(__file__).resolve().parent
+
     candidates_result = evaluate_all_candidates(sort_result=True)
 
     edges = build_correlation_edges(
@@ -160,8 +203,16 @@ def main():
             f"STV=({strength:.3f}, {confidence:.3f})"
         )
 
-    write_pln_stvs_and_relations(final_beta_nodes, edges)
+    write_pln_stvs_and_relations(
+        final_beta_nodes, edges, project_dir / "pln_rules.metta", candidates_result
+    )
     print("\nGenerated pln_rules.metta")
+
+    if args.run_pln:
+        petta_dir = project_dir / "PeTTa"
+        if not (petta_dir / "run.sh").is_file():
+            raise FileNotFoundError("Install PeTTa in factor_graph_pln/PeTTa to run PLN")
+        subprocess.run(["sh", "run.sh", "../pln_rules.metta"], cwd=petta_dir, check=True)
 
     factor_graph = build_factor_graph(final_beta_nodes, edges)
 

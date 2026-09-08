@@ -23,7 +23,8 @@ PeTTa requires SWI-Prolog >= 9.3.x;
 Candidates start with Beta(1,1); correct/incorrect predictions add evidence.
 Correlation links pass discounted evidence, swapping it for negative links.
 Belief is `alpha / (alpha + beta)`. Propagation is approximate and shared
-observations can inflate confidence. PLN premises are assumed examples.
+observations can inflate confidence. One supported example per rule is selected automatically.
+Premise STVs come from weighted correctness counts; revision uses separate row subsets.
 
 - `output.log`: rankings; C3 and C5 lead with belief ≈ 0.607.
 - `pln_query_results.log`: similarity, deduction, induction, abduction, revision.

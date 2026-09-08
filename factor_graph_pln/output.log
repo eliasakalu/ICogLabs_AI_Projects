@@ -41,5 +41,9 @@ Converged
 18. C7 | belief=0.400 | STV=(0.400, 0.800)
 19. C1 | belief=0.393 | STV=(0.393, 0.857)
 20. C14 | belief=0.393 | STV=(0.393, 0.857)
+Deduction: ('C10', 'C3') + ('C3', 'C20') -> ('C10', 'C20')
+Induction: ('C3', 'C10') + ('C3', 'C20') -> ('C10', 'C20')
+Abduction: ('C10', 'C3') + ('C20', 'C3') -> ('C10', 'C20')
+Revision: ('C10', 'C3') + ('C10', 'C3') -> ('C10', 'C3')
 
 Generated pln_rules.metta

@@ -23,8 +23,6 @@
 (= (STV C2) (stv 0.400000 0.800000))
 (= (STV C7) (stv 0.400000 0.800000))
 (= (STV C14) (stv 0.392857 0.857143))
-(= (STV GroupX) (stv 0.500000 0.800000))
-
 ; Graph KB
 (= (kb)
   (
@@ -34,38 +32,41 @@
 
 !(PLN.Query (kb) (Similarity C6 C19))
 
+; Inheritance X Y estimates Y correctness given X correctness.
+; Candidate STVs above retain the approximate graph beliefs.
+
 ; Deduction
 (= (deduction_kb)
   (
-    (Sentence ((Inheritance C1 C2) (stv 0.900000 0.800000)) (201))
-    (Sentence ((Inheritance C2 C3) (stv 0.800000 0.800000)) (202))
+    (Sentence ((Inheritance C10 C3) (stv 0.714286 0.714286)) (201))
+    (Sentence ((Inheritance C3 C20) (stv 0.714286 0.714286)) (202))
   )
 )
-!(PLN.Query (deduction_kb) (Inheritance C1 C3))
+!(PLN.Query (deduction_kb) (Inheritance C10 C20))
 
 ; Induction
 (= (induction_kb)
   (
-    (Sentence ((Inheritance GroupX C1) (stv 0.900000 0.800000)) (301))
-    (Sentence ((Inheritance GroupX C2) (stv 0.800000 0.800000)) (302))
+    (Sentence ((Inheritance C3 C10) (stv 0.714286 0.714286)) (301))
+    (Sentence ((Inheritance C3 C20) (stv 0.714286 0.714286)) (302))
   )
 )
-!(PLN.Query (induction_kb) (Inheritance C1 C2))
+!(PLN.Query (induction_kb) (Inheritance C10 C20))
 
 ; Abduction
 (= (abduction_kb)
   (
-    (Sentence ((Inheritance C1 C3) (stv 0.600000 0.800000)) (401))
-    (Sentence ((Inheritance C2 C3) (stv 0.600000 0.800000)) (402))
+    (Sentence ((Inheritance C10 C3) (stv 0.714286 0.714286)) (401))
+    (Sentence ((Inheritance C20 C3) (stv 0.714286 0.714286)) (402))
   )
 )
-!(PLN.Query (abduction_kb) (Inheritance C1 C2))
+!(PLN.Query (abduction_kb) (Inheritance C10 C20))
 
 ; Revision
 (= (revision_kb)
   (
-    (Sentence ((Inheritance C1 C2) (stv 0.700000 0.600000)) (501))
-    (Sentence ((Inheritance C1 C2) (stv 0.900000 0.800000)) (502))
+    (Sentence ((Inheritance C10 C3) (stv 0.750000 0.500000)) (501))
+    (Sentence ((Inheritance C10 C3) (stv 0.600000 0.600000)) (502))
   )
 )
-!(PLN.Query (revision_kb) (Inheritance C1 C2))
+!(PLN.Query (revision_kb) (Inheritance C10 C3))
