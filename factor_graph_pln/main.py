@@ -1,4 +1,6 @@
-from parity_tools import evaluate_all_candidates, calculate_weighted_evidence
+from parity_tools import (
+    evaluate_all_candidates, calculate_weighted_evidence, truth_table, ROW_WEIGHTS,
+)
 
 from factor_inference import (
     build_correlation_edges,
@@ -14,11 +16,33 @@ from visualizer import visualize_factor_graph
 CORR_THRESHOLD = 0.8
 
 
+def relation_stv(results, source, target, rows):
+    """Count target correctness on rows where the source is correct."""
+    success = failure = 0.0
+    for index in rows:
+        expected = truth_table[index][3]
+        source_correct = source == "GroupX" or results[source]["outputs"][index] == expected
+        if source_correct:
+            if results[target]["outputs"][index] == expected:
+                success += ROW_WEIGHTS[index]
+            else:
+                failure += ROW_WEIGHTS[index]
+    evidence = success + failure
+    # Use the same Beta(1,1) prior and confidence mapping as candidate nodes.
+    return f"(stv {(success + 1) / (evidence + 2):.6f} {evidence / (evidence + 2):.6f})"
+
+
 def write_pln_stvs_and_relations(
     final_beta_nodes,
     edges,
     output_file="./pln_rules.metta"
 ):
+    results = evaluate_all_candidates()
+    rows = range(len(truth_table))
+    required = {"C1", "C2", "C3"}
+    if not required.issubset(final_beta_nodes):
+        raise ValueError("The PLN rule examples require candidates C1, C2, and C3")
+
     with open(output_file, "w") as f:
         # PLN imports
         f.write("""!(import! &self (library lib_import))
@@ -38,9 +62,11 @@ def write_pln_stvs_and_relations(
                 f"(stv {strength:.6f} {confidence:.6f}))\n"
             )
 
+        # GroupX denotes all evaluated input rows.
+        total_weight = sum(ROW_WEIGHTS)
         f.write(
-            "(= (STV GroupX) "
-            "(stv 0.500000 0.800000))\n\n"
+            f"(= (STV GroupX) (stv 1.000000 "
+            f"{total_weight / (total_weight + 2):.6f}))\n\n"
         )
 
         # Graph KB
@@ -80,52 +106,27 @@ def write_pln_stvs_and_relations(
                 "available at current threshold\n\n"
             )
 
-        # Deduction
-        f.write("""; Deduction
-(= (deduction_kb)
-  (
-    (Sentence ((Inheritance C1 C2) (stv 0.900000 0.800000)) (201))
-    (Sentence ((Inheritance C2 C3) (stv 0.800000 0.800000)) (202))
-  )
-)
-!(PLN.Query (deduction_kb) (Inheritance C1 C3))
-
-""")
-
-        # Induction
-        f.write("""; Induction
-(= (induction_kb)
-  (
-    (Sentence ((Inheritance GroupX C1) (stv 0.900000 0.800000)) (301))
-    (Sentence ((Inheritance GroupX C2) (stv 0.800000 0.800000)) (302))
-  )
-)
-!(PLN.Query (induction_kb) (Inheritance C1 C2))
-
-""")
-
-        # Abduction
-        f.write("""; Abduction
-(= (abduction_kb)
-  (
-    (Sentence ((Inheritance C1 C3) (stv 0.600000 0.800000)) (401))
-    (Sentence ((Inheritance C2 C3) (stv 0.600000 0.800000)) (402))
-  )
-)
-!(PLN.Query (abduction_kb) (Inheritance C1 C2))
-
-""")
-
-        # Revision
-        f.write("""; Revision
-(= (revision_kb)
-  (
-    (Sentence ((Inheritance C1 C2) (stv 0.700000 0.600000)) (501))
-    (Sentence ((Inheritance C1 C2) (stv 0.900000 0.800000)) (502))
-  )
-)
-!(PLN.Query (revision_kb) (Inheritance C1 C2))
-""")
+        # Relation evidence comes from correctness on the input rows.
+        examples = (
+            ("Deduction", (("C1", "C2"), ("C2", "C3")), ("C1", "C3"), 201),
+            ("Induction", (("GroupX", "C1"), ("GroupX", "C2")), ("C1", "C2"), 301),
+            ("Abduction", (("C1", "C3"), ("C2", "C3")), ("C1", "C2"), 401),
+            ("Revision", (("C1", "C2"), ("C1", "C2")), ("C1", "C2"), 501),
+        )
+        f.write("; Inheritance X Y estimates Y correctness given X correctness.\n")
+        f.write("; Candidate STVs above retain the approximate graph beliefs.\n")
+        for label, premises, query, first_stamp in examples:
+            kb = label.lower() + "_kb"
+            f.write(f"\n; {label}\n(= ({kb})\n  (\n")
+            for offset, (source, target) in enumerate(premises):
+                # Revision uses disjoint rows, not two copies of the same evidence.
+                evidence_rows = rows[offset::2] if label == "Revision" else rows
+                stv = relation_stv(results, source, target, evidence_rows)
+                f.write(
+                    f"    (Sentence ((Inheritance {source} {target}) {stv}) "
+                    f"({first_stamp + offset}))\n"
+                )
+            f.write(f"  )\n)\n!(PLN.Query ({kb}) (Inheritance {query[0]} {query[1]}))\n")
 
 
 def main():
